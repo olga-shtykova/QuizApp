@@ -142,7 +142,6 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\RegisterModel.cs" />
-    <Compile Include="Models\SelectedTestModel.cs" />
     <Compile Include="Models\Subcategory.cs" />
     <Compile Include="Models\SubSubcategory.cs" />
     <Compile Include="Models\Test.cs" />
