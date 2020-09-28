@@ -1,0 +1,69 @@
+﻿@model QuizApp.Models.TestSelectionModel
+@{
+    ViewBag.Title = "SelectTest";
+}
+
+@using (Html.BeginForm("SelectTest", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+     
+<div class="container">
+    <div class="row form-horizontal">
+        <h3 style="color:steelblue">Выбрать тест</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="control-label col-md-3">Тема</div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.CategoryId, Model.CategoriesList, "Выбор темы", new { onchange = "document.forms[0].submit();", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">Подтема</div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.SubcategoryId, Model.SubcategoriesList, "Выбор подтемы", new { onchange = "document.forms[0].submit();", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">Подподтема</div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.SubSubcategoryId, Model.SubSubcategoriesList, "Выбор подподтемы", new { onchange = "document.forms[0].submit();", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">Тест</div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.TestId, Model.TestsList, "Выбор теста", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-5">
+                <input type="submit" id="Enter" value="Выбрать" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Назад", "QuizPage", "Home")
+</div>
+
+@section Scripts{    
+    <script type="text/javascript">
+        $(function () {            
+            if ($("#CategoryId").val() != "" && $("#SubcategoryId").val() != "" && $("#SubSubcategoryId").val() != "" && $("#TestId").val() != "") {
+                var message = "Category: " + $("#CategoryId option:selected").text();
+                message += "\nSubcategory: " + $("#SubcategoryId option:selected").text();
+                message += "\nSubSubcategory: " + $("#SubSubcategoryId option:selected").text();
+                message += "\nTest: " + $("#TestId option:selected").text();
+                alert(message);
+            }
+        });
+    </script>
+}

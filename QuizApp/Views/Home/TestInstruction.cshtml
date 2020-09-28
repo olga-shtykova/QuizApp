@@ -1,0 +1,47 @@
+﻿@model QuizApp.Models.TestSelectionModel
+@{
+    ViewBag.Title = "TestInstruction";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 style="color:steelblue"><b>@ViewBag.TestTitle</b></h3>
+            <h4><b>@ViewBag.TestDescription</b></h4>
+        </div>
+        <div class="col-md-6">
+            Продолжительность теста: @ViewBag.TestDuration минут
+            <br />Количество вопросов: @ViewBag.QuestionCount
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            Прежде чем вы начнете, пожалуйста внимательно прочтите инструкцию.
+        </div>
+    </div>
+    <h5>Что оценивает тест?</h5>
+    <ul>
+        <li>Этот тест оценивает ваши знания, эрудицию, творчество, способность принимать решения.</li>
+    </ul>
+    <h5>Как работает тест?</h5>
+    <ul>
+        <li>Ваши ответы будут защитаны только при нажатии кнопки <span class="highlight" style="color:navy"><b>Готово</b></span></li>
+        <li>Тест расчитан на время. Отсчет начнется сразу после нажатия кнопки <span class="highlight" style="color:navy"><b>Начать Тест</b></span></li>
+    </ul>
+    <h5>Удачи!</h5>
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("Enrollment", "Home", FormMethod.Post, new { @Id = "formEnrollment" }))
+        {
+            @Html.HiddenFor(model => Model.TestId)
+
+            <a href="javascript:void(0);" onclick="getElementById('formEnrollment').submit();" class="btn btn-default">Начать Тест</a>
+        }
+    }
+
+</div>
+<br />
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>

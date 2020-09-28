@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "QuizPage";
+}
+
+<div class="row">
+    <div class="col-md-10">
+        <h3 style="color:steelblue">Что вы хотите сделать?</h3>
+    </div>
+    <div class="col-md-10">
+        <h4>Пройти тест:</h4>
+        <p><a class="btn btn-default" href=@Url.Action("SelectTest", "Home")>Выбрать тест</a></p>
+    </div>
+    <div class="col-md-10">
+        <h4>Создать или редактировать тест:</h4>
+        <p>
+            <a class="btn btn-default" href=@Url.Action("CreateTest", "Test")>Создать тест</a>
+            <a class="btn btn-default" href=@Url.Action("EditTest", "Test")>Редактировать тест</a>
+        </p>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
