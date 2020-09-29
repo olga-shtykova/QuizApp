@@ -115,7 +115,7 @@ namespace QuizApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var testSelected = _db.Tests.Where(t => t.Id == model.TestId).FirstOrDefault();
+                var testSelected = _db.Tests.FirstOrDefault(t => t.Id == model.TestId);
                 if (testSelected != null)
                 {
                     ViewBag.TestTitle = testSelected.TestTitle;
@@ -132,7 +132,7 @@ namespace QuizApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var testSelected = _db.Tests.Where(t => t.Id == model.TestId).FirstOrDefault();
+                var testSelected = _db.Tests.FirstOrDefault(t => t.Id == model.TestId);
                 if (testSelected != null)
                 {
                     ViewBag.TestTitle = testSelected.TestTitle;
@@ -149,7 +149,7 @@ namespace QuizApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var testSelected = _db.Tests.Where(t => t.Id == model.TestId).FirstOrDefault();
+                var testSelected = _db.Tests.FirstOrDefault(t => t.Id == model.TestId);
                 EnrollmentModel emodel = new EnrollmentModel();
                 emodel.EnrollmentDate = DateTime.UtcNow;
                 emodel.UserLogin = User.Identity.Name; // gives login                
