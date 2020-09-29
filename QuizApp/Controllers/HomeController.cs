@@ -1,5 +1,6 @@
 ﻿using QuizApp.DAL;
 using QuizApp.Models;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -99,7 +100,7 @@ namespace QuizApp.Controllers
 
                 if (testSelected != null)
                 {
-                    Session["SelectedQuiz"] = testSelected;
+                    Session["SelectedTest"] = testSelected;
                     
                     return RedirectToAction("TestInstruction", "Home");
                 }
@@ -110,7 +111,7 @@ namespace QuizApp.Controllers
         [HttpGet]
         public ActionResult TestInstruction()
         {
-            TestSelectionModel model = Session["SelectedQuiz"] as TestSelectionModel;
+            TestSelectionModel model = Session["SelectedTest"] as TestSelectionModel;
 
             if (ModelState.IsValid)
             {
@@ -146,8 +147,52 @@ namespace QuizApp.Controllers
         [HttpPost]
         public ActionResult Enrollment(TestSelectionModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var testSelected = _db.Tests.Where(t => t.Id == model.TestId).FirstOrDefault();
+                EnrollmentModel emodel = new EnrollmentModel();
+                emodel.EnrollmentDate = DateTime.UtcNow;
+                emodel.UserLogin = User.Identity.Name; // gives login                
 
-            return RedirectToAction("TestPage", new { @Token = Session["Token"] });
+                // ищем Id пользователя
+                var userConnected = _db.Users
+                    .FirstOrDefault(u => u.Login == emodel.UserLogin);
+
+                if (userConnected == null)
+                {
+                    return HttpNotFound();
+                }
+
+                Enrollment enrollment = _db.Enrollments
+                .Where(e => e.UserId == userConnected.Id && e.TestId == model.TestId
+                && e.TokenExpirationTime > DateTime.UtcNow).FirstOrDefault();
+
+                if (enrollment != null)
+                {
+                    this.Session["Token"] = enrollment.Token;
+                    this.Session["TokenExpiration"] = enrollment.TokenExpirationTime;
+                }
+
+                if (testSelected != null)
+                {
+                    Enrollment newEnrollment = new Enrollment()
+                    {
+                        UserId = userConnected.Id,
+                        EnrollmentDate = DateTime.UtcNow,
+                        TestId = model.TestId,
+                        Token = Guid.NewGuid(),
+                        TokenExpirationTime = DateTime.UtcNow.AddMinutes(testSelected.Duration)
+                    };
+                    userConnected.Enrollments.Add(newEnrollment);
+                    _db.Enrollments.Add(newEnrollment);
+                    _db.SaveChanges();
+
+                    this.Session["Token"] = newEnrollment.Token;
+                    this.Session["TokenExpiration"] = newEnrollment.TokenExpirationTime;
+                }
+                return RedirectToAction("TestPage", new { @Token = Session["Token"] });
+            }
+            return View();
         }
 
         protected override void Dispose(bool disposing)

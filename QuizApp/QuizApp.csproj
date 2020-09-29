@@ -137,6 +137,7 @@
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Choice.cs" />
+    <Compile Include="Models\EnrollmentModel.cs" />
     <Compile Include="Models\TestSelectionModel.cs" />
     <Compile Include="Models\Enrollment.cs" />
     <Compile Include="Models\LoginModel.cs" />

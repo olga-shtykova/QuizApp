@@ -1,23 +1,25 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace QuizApp.Models
 {
-    public class Enrollment
+    public class EnrollmentModel
     {
-        // Primary key
-        [Key]
-        public int Id { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public Guid Token { get; set; }
         public DateTime TokenExpirationTime { get; set; }
 
         // Foreign key
         public int? UserId { get; set; }
+        public string UserLogin { get; set; }
         public int? TestId { get; set; }
 
-        // Navigation property
-        public virtual User User { get; set; }        
-        public virtual Test Test { get; set; }
+        public List<SelectListItem> TestsList { get; set; }
+
+        public EnrollmentModel()
+        {
+            this.TestsList = new List<SelectListItem>();
+        }
     }
 }
