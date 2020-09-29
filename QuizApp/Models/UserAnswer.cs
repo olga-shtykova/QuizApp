@@ -2,18 +2,22 @@
 
 namespace QuizApp.Models
 {
-    public class Answer
+    public class UserAnswer
     {
         // Primary key
         [Key]
         public int Id { get; set; }
-        public string AnswerText { get; set; }
-        public int Score { get; set; }
+        public string Answer { get; set; }
+        public int? Score { get; set; }
 
         // Foreign key
+        public int? EnrollmentId { get; set; }
         public int? QuestionId { get; set; }
+        public int? ChoiceID { get; set; }
 
         // Navigation property
+        public virtual Enrollment Enrollment { get; set; }
         public virtual Question Question { get; set; }
+        public virtual Choice Choice { get; set; }
     }
 }

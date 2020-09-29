@@ -20,12 +20,12 @@ namespace QuizApp.Models
         // Navigation properties
         public virtual Test Test { get; set; }
         public virtual ICollection<Choice> Choices { get; set; }
-        public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<UserAnswer> UserAnswers { get; set; }
 
         public Question()
         {
             this.Choices = new List<Choice>();
-            this.Answers = new List<Answer>();
+            this.UserAnswers = new List<UserAnswer>();
         }
     }
 }
