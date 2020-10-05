@@ -28,8 +28,7 @@ namespace QuizApp.Controllers
             model.CategoriesList = _db.Categories.Select(c => new SelectListItem
             {
                 Text = c.CategoryName,
-                Value = c.Id.ToString()
-
+                Value = c.Id.ToString()     
             }).ToList();
             return View(model);
         }
@@ -45,7 +44,6 @@ namespace QuizApp.Controllers
             {
                 Text = c.CategoryName,
                 Value = c.Id.ToString()
-
             }).ToList();
 
             // Выбор подтемы
@@ -57,7 +55,6 @@ namespace QuizApp.Controllers
                     {
                         Text = s.SubcategoryName,
                         Value = s.Id.ToString()
-
                     }).ToList();
 
                 // Выбор подподтемы
@@ -69,7 +66,6 @@ namespace QuizApp.Controllers
                     {
                         Text = s.SubSubcategoryName,
                         Value = s.Id.ToString()
-
                     }).ToList();
                 }
 
@@ -82,7 +78,6 @@ namespace QuizApp.Controllers
                    {
                        Text = s.TestTitle,
                        Value = s.Id.ToString()
-
                    }).ToList();
                 }
             }
@@ -100,6 +95,7 @@ namespace QuizApp.Controllers
 
                 if (testSelected != null)
                 {
+                    // Записываем в состояние сеанса информацию выбранном тесте
                     Session["SelectedTest"] = testSelected;
 
                     return RedirectToAction("TestInstruction", "Home");
@@ -154,6 +150,7 @@ namespace QuizApp.Controllers
             {
                 var testSelected = _db.Tests.FirstOrDefault(t => t.Id == model.TestId);
 
+                // Получаем логин пользователя
                 var userLogin = User.Identity.Name;
 
                 // ищем Id пользователя
@@ -192,9 +189,9 @@ namespace QuizApp.Controllers
                     this.Session["Token"] = newEnrollment.Token;
                     this.Session["TokenExpiration"] = newEnrollment.TokenExpirationTime;
                 }
-                return RedirectToAction("TestPage", new { @Token = Session["Token"] });
+                return RedirectToAction("TestPage", new { Token = Session["Token"] });
             }
-            return View();
+            return View(); 
         }
 
         [HttpGet]
