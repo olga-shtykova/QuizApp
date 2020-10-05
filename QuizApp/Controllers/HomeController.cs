@@ -109,6 +109,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult TestInstruction()
         {
             TestSelectionModel model = Session["SelectedTest"] as TestSelectionModel;
@@ -128,6 +129,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult TestInstruction(TestSelectionModel model)
         {
             if (ModelState.IsValid)
@@ -145,6 +147,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Enrollment(TestSelectionModel model)
         {
             if (ModelState.IsValid)
@@ -195,6 +198,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult TestPage(Guid token, int? qnum)
         {
             if (token == null)
@@ -255,6 +259,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult TestPage(AnswerModel model)
         {
             if (ModelState.IsValid)
@@ -303,6 +308,7 @@ namespace QuizApp.Controllers
             }
         }
 
+        [Authorize]
         public ActionResult TestResult()
         {
 
