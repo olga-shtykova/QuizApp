@@ -1,12 +1,8 @@
 ﻿using QuizApp.DAL;
 using QuizApp.Models;
 using System;
-using System.Collections.Generic;
-using System.EnterpriseServices;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Web.Mvc;
-using System.Web.WebPages;
 
 namespace QuizApp.Controllers
 {
