@@ -137,6 +137,8 @@
     <Compile Include="Models\UserAnswer.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Choice.cs" />
+    <Compile Include="Models\AnswerModel.cs" />
+    <Compile Include="Models\ChoiceModel.cs" />
     <Compile Include="Models\EnrollmentModel.cs" />
     <Compile Include="Models\TestSelectionModel.cs" />
     <Compile Include="Models\Enrollment.cs" />
@@ -296,6 +298,7 @@
     <Content Include="Views\Test\Details.cshtml" />
     <Content Include="Views\Test\Edit.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Home\TestPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

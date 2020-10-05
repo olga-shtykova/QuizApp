@@ -36,7 +36,14 @@ namespace QuizApp.Controllers
                 if (userConnected == null)
                 {
                     // сохраняем пользователя в базе данных
-                    _db.Users.Add(new User { FirstName = model.FirstName, LastName = model.LastName, Login = model.Login, Password = model.Password, Email = model.Email });
+                    _db.Users.Add(new User 
+                    { 
+                        FirstName = model.FirstName, 
+                        LastName = model.LastName, 
+                        Login = model.Login, 
+                        Password = model.Password, 
+                        Email = model.Email 
+                    });
                     _db.SaveChanges();
 
                     // проверяем, что пользователь создан

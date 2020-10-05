@@ -9,12 +9,12 @@ namespace QuizApp.Models
         // Primary key
         [Key]
         public int Id { get; set; }
+        public int QuestionNumber { get; set; }
         public string QuestionText { get; set; }
         public string QuestionType { get; set; }
         public int Points { get; set; }
 
-        // Foreign key
-        [ForeignKey("Test")]
+        // Foreign key        
         public int? TestId { get; set; }
 
         // Navigation properties

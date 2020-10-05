@@ -72,21 +72,126 @@ namespace QuizApp.DAL
 
             var questions = new List<Question>
             {
-                new Question {QuestionText = "Шизофрения это -", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Основы физической привлекательности для потенциальных романтических партнеров?", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Детектор лжи...", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Какое утверждение верно в отношении человеческого мозга?", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Как ведуд себя люди под гипнозом?", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Лучший способ справиться с гневом и агрессией - это спорт и физические нагрузки", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Счастливый работник - продуктивный работник", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Красивые люди кажутся другим более умными и успешными, чем некрасивые", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Как называется феномен, когда заложник начинает сопереживать своему похитителю?", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "В темной комнате точка света будет казаться движущейся. Эта иллюзия называется...", QuestionType = "Radio", Points = 10, TestId = 1},
-                new Question {QuestionText = "Хвост кошки стоит «трубой», а его кончик выпрямлен…", QuestionType = "Checkbox", Points = 20, TestId = 2},
-                new Question {QuestionText = "Кошка бьет хвостом об пол", QuestionType = "Checkbox", Points = 20, TestId = 2},
-                new Question {QuestionText = "Что вы слышите в кошачьем шипении?", QuestionType = "Checkbox", Points = 20, TestId = 2},
-                new Question {QuestionText = "В какой позе питомец расслаблен?", QuestionType = "Checkbox", Points = 20, TestId = 2},
-                new Question {QuestionText = "Кошка обычно прижимает уши к голове, когда…", QuestionType = "Checkbox", Points = 20, TestId = 2},
+                 new Question
+                {
+                    QuestionNumber = 1,
+                    QuestionText = "Шизофрения это -",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 2,
+                    QuestionText = "Основы физической привлекательности для потенциальных романтических партнеров?",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 3,
+                    QuestionText = "Детектор лжи...",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 4,
+                    QuestionText = "Какое утверждение верно в отношении человеческого мозга?",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 5,
+                    QuestionText = "Как ведуд себя люди под гипнозом?",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 6,
+                    QuestionText = "Лучший способ справиться с гневом и агрессией - это спорт и физические нагрузки",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 7,
+                    QuestionText = "Счастливый работник - продуктивный работник",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 8,
+                    QuestionText = "Красивые люди кажутся другим более умными и успешными, чем некрасивые",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 9,
+                    QuestionText = "Как называется феномен, когда заложник начинает сопереживать своему похитителю?",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 10,
+                    QuestionText = "В темной комнате точка света будет казаться движущейся. Эта иллюзия называется...",
+                    QuestionType = "Radio",
+                    Points = 10,
+                    TestId = 1
+                },
+                new Question
+                {
+                    QuestionNumber = 1,
+                    QuestionText = "Хвост кошки стоит «трубой», а его кончик выпрямлен…",
+                    QuestionType = "Checkbox",
+                    Points = 20,
+                    TestId = 2
+                },
+                new Question
+                {
+                    QuestionNumber = 2,
+                    QuestionText = "Кошка бьет хвостом об пол",
+                    QuestionType = "Checkbox",
+                    Points = 20,
+                    TestId = 2
+                },
+                new Question
+                {
+                    QuestionNumber = 3,
+                    QuestionText = "Что вы слышите в кошачьем шипении?",
+                    QuestionType = "Checkbox",
+                    Points = 20,
+                    TestId = 2
+                },
+                new Question
+                {
+                    QuestionNumber = 4,
+                    QuestionText = "В какой позе питомец расслаблен?",
+                    QuestionType = "Checkbox",
+                    Points = 20,
+                    TestId = 2
+                },
+                new Question
+                {
+                    QuestionNumber = 5,
+                    QuestionText = "Кошка обычно прижимает уши к голове, когда…",
+                    QuestionType = "Checkbox",
+                    Points = 20,
+                    TestId = 2
+                },
             };
             questions.ForEach(s => db.Questions.Add(s));
             db.SaveChanges();

@@ -1,0 +1,90 @@
+﻿@model QuizApp.Models.AnswerModel
+@{
+    ViewBag.Title = "TestPage";
+}
+<h3>@Model.TestTitle</h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">Вопрос @Model.QuestionNumber</div>
+        <div class="row">Оставшееся время:</div>
+    </div>
+</div>
+
+@using (Html.BeginForm("TestPage", "Home", FormMethod.Post, new { @id = "form" }))
+{
+    @Html.Hidden("Direction", "previous");
+    @Html.Hidden("Direction", "next");
+    @Html.Hidden("Token", Session["Token"]);
+    @Html.Hidden("TestId", Model.TestId);
+    @Html.Hidden("QuestionId", Model.QuestionNumber);
+
+    <div class="row">
+        <div class="col-md-10">
+            <p>
+                <br />
+                <h4><b>@Model.QuestionText</b></h4>
+            </p>
+            @switch (Model.QuestionType)
+            {
+                case "Radio":
+                    <div class="row"><i>Выбирете один правильный ответ</i></div>
+
+                    for (int i = 0; i < Model.UserChoices.Count; i++)
+                    {
+                           <div>
+                                @Html.RadioButtonFor(model => model.UserChoices, Model.UserChoices[i].ChoiceId)
+                               @Html.HiddenFor(model => model.UserChoices[i].ChoiceId)
+                               @Html.Label(Model.UserChoices[i].ChoiceText)     
+                           </div>
+
+                    }
+                    break;
+
+                case "Checkbox":
+                    <div class="row"><i>Выбирете все правильные ответы</i></div>
+
+                    for (int i = 0; i < Model.UserChoices.Count; i++)
+                    {
+                        <div>
+                            @Html.CheckBoxFor(model => model.UserChoices[i].IsSelected, Model.UserChoices[i].ChoiceId)
+                            @Html.HiddenFor(model => model.UserChoices[i].ChoiceId)
+                            @Html.Label(Model.UserChoices[i].ChoiceText)                                                      
+                        </div>
+                    }
+                    break;
+
+                case "Text":
+                    <div class="row"><i>Напишите ваш ответ</i></div>
+                    <div>
+                        <p>
+                            @Html.TextAreaFor(model => model.UserChoices[0].ChoiceId, new { @class = "form-control" })
+                            @Html.HiddenFor(model => model.UserChoices[0].ChoiceId)                            
+                        </p>
+                    </div>
+                    break;
+            }
+        </div>
+    </div>
+   
+    <div class="row">
+        <div class="col-md-10">
+            <table>
+                <tr>
+                    <td><a href="javascript:void(0);" class="btn btn-primary" onclick="saveBackward(this);">Сохранить и Предыдущий</a></td>
+                    <td><a href="javascript:void(0);" class="btn btn-primary" onclick="saveForward(this);">Сохранить и Следующий</a></td>                    
+                </tr>
+            </table>
+        </div>
+    </div>    
+}
+<script>
+    function saveForward() {
+        $('#Direction').val('next');
+        document.getElementById('form').submit();
+    }
+    function saveBackward() {
+        $('#Direction').val('previous');
+        document.getElementById('form').submit();
+    }
+</script>
+

@@ -1,22 +1,26 @@
 ﻿using QuizApp.DAL;
 using QuizApp.Models;
 using System;
+using System.Collections.Generic;
+using System.EnterpriseServices;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web.Mvc;
+using System.Web.WebPages;
 
 namespace QuizApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly QuizContext _db = new QuizContext();        
+        private readonly QuizContext _db = new QuizContext();
         public ActionResult Index()
         {
             return View();
         }
-                
+
         [Authorize]
         public ActionResult QuizPage()
-        {           
+        {
             return View();
         }
 
@@ -46,7 +50,7 @@ namespace QuizApp.Controllers
                 Text = c.CategoryName,
                 Value = c.Id.ToString()
 
-            }).ToList();                                
+            }).ToList();
 
             // Выбор подтемы
             if (categoryId.HasValue)
@@ -62,7 +66,7 @@ namespace QuizApp.Controllers
 
                 // Выбор подподтемы
                 if (subcategoryId.HasValue)
-                {                  
+                {
                     model.SubSubcategoriesList = _db.SubSubcategories
                     .Where(s => s.SubcategoryId == subcategoryId.Value)
                     .Select(s => new SelectListItem
@@ -83,7 +87,7 @@ namespace QuizApp.Controllers
                        Text = s.TestTitle,
                        Value = s.Id.ToString()
 
-                   }).ToList();                    
+                   }).ToList();
                 }
             }
             if (testId.HasValue)
@@ -96,12 +100,12 @@ namespace QuizApp.Controllers
                        TestDescription = t.Description,
                        QuestionsCount = t.Questions.Where(q => q.TestId == model.TestId).Count(),
                        TestDuration = t.Duration
-                   }).FirstOrDefault();                   
+                   }).FirstOrDefault();
 
                 if (testSelected != null)
                 {
                     Session["SelectedTest"] = testSelected;
-                    
+
                     return RedirectToAction("TestInstruction", "Home");
                 }
             }
@@ -141,7 +145,7 @@ namespace QuizApp.Controllers
                     ViewBag.TestDuration = testSelected.Duration;
                 }
             }
-            return View(); 
+            return View();
         }
 
         [HttpPost]
@@ -150,13 +154,12 @@ namespace QuizApp.Controllers
             if (ModelState.IsValid)
             {
                 var testSelected = _db.Tests.FirstOrDefault(t => t.Id == model.TestId);
-                EnrollmentModel emodel = new EnrollmentModel();
-                emodel.EnrollmentDate = DateTime.UtcNow;
-                emodel.UserLogin = User.Identity.Name; // gives login                
+
+                var userLogin = User.Identity.Name;
 
                 // ищем Id пользователя
                 var userConnected = _db.Users
-                    .FirstOrDefault(u => u.Login == emodel.UserLogin);
+                    .FirstOrDefault(u => u.Login == userLogin);
 
                 if (userConnected == null)
                 {
@@ -164,8 +167,8 @@ namespace QuizApp.Controllers
                 }
 
                 Enrollment enrollment = _db.Enrollments
-                .Where(e => e.UserId == userConnected.Id && e.TestId == model.TestId
-                && e.TokenExpirationTime > DateTime.UtcNow).FirstOrDefault();
+                .FirstOrDefault(e => e.UserId == userConnected.Id && e.TestId == model.TestId
+                && e.TokenExpirationTime > DateTime.UtcNow);
 
                 if (enrollment != null)
                 {
@@ -195,11 +198,125 @@ namespace QuizApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult TestPage(Guid token, int? qnum)
+        {
+            if (token == null)
+            {
+                return RedirectToAction("SelectTest");
+            }
+
+            //Проверяем, что пользователь зарегистрирован пройти тест
+            var enrollment = _db.Enrollments.FirstOrDefault(e => e.Token.Equals(token));
+
+            if (enrollment == null)
+            {
+                ModelState.AddModelError("", "Неверный токен!");
+                return RedirectToAction("SelectTest");
+            }
+            if (enrollment.TokenExpirationTime < DateTime.UtcNow)
+            {
+                ModelState.AddModelError("", $"Время для прохождения теста истекло: {enrollment.TokenExpirationTime}");
+                return RedirectToAction("SelectTest");
+            }
+
+            var testSelected = _db.Enrollments.FirstOrDefault(e => e.Token.Equals(token));
+
+            if (qnum.GetValueOrDefault() < 1)
+                qnum = 1;
+
+            var testQuestionId = _db.Questions
+               .Where(q => q.TestId == testSelected.TestId && q.QuestionNumber == qnum)
+               .Select(q => q.Id).FirstOrDefault();
+
+            if (testQuestionId > 0)
+            {
+                var model = _db.Questions.Where(q => q.Id == testQuestionId)
+                    .Select(q => new AnswerModel
+                    {
+                        QuestionType = q.QuestionType,
+                        QuestionNumber = q.QuestionNumber,
+                        QuestionText = q.QuestionText,
+                        QPoints = q.Points,
+                        TestId = q.TestId,
+                        TestTitle = q.Test.TestTitle,
+                        UserChoices = q.Choices.Select(c => new ChoiceModel
+                        {
+                            ChoiceId = c.Id,
+                            ChoiceText = c.ChoiceText
+                        }).ToList()
+                    }).FirstOrDefault();    
+
+                model.TotalQuestionsCount = _db.Questions
+                    .Where(q => q.TestId == enrollment.TestId).Count();
+
+                return View(model);
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult TestPage(AnswerModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var enrollment = _db.Enrollments.Where(x => x.Token.Equals(model.Token)).FirstOrDefault();
+
+                var testQuestionInfo = _db.Questions.Where(q => q.TestId == enrollment.TestId && q.QuestionNumber == model.QuestionId)
+                    .Select(q => new
+                    {
+                        q.Id,
+                        q.QuestionType,
+                        Point = q.Points
+                    }).FirstOrDefault();
+                
+
+            }
+            // Показать следующий или предыдущий вопрос
+
+            var nextQuestionNumber = 1;
+
+            if (model.Direction.Equals("next", StringComparison.CurrentCultureIgnoreCase))
+            {
+                nextQuestionNumber = _db.Questions.Where(q => q.TestId == model.TestId
+                && q.QuestionNumber > model.QuestionId)
+                .OrderBy(x => x.QuestionNumber).Take(1).Select(x => x.QuestionNumber).FirstOrDefault();
+            }
+            else
+            {
+                nextQuestionNumber = _db.Questions.Where(x => x.TestId == model.TestId
+                && x.QuestionNumber < model.QuestionId)
+                .OrderByDescending(x => x.QuestionNumber).Take(1).Select(x => x.QuestionNumber).FirstOrDefault();
+            }
+
+            if (nextQuestionNumber < 1)
+            {
+                // После последнего вопроса перенаправляем на результат теста
+                return RedirectToAction("TestResult", new { @token = Session["Token"] });
+            }
+            else
+            {
+                return RedirectToAction("TestPage", new
+                {
+                    @token = Session["Token"],
+                    @qnum = nextQuestionNumber
+                });
+            }
+        }
+
+        public ActionResult TestResult()
+        {
+
+            return View();
+        }
         protected override void Dispose(bool disposing)
         {
             _db.Dispose();
             base.Dispose(disposing);
         }
     }
-    
+
 }
