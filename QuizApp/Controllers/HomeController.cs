@@ -28,7 +28,7 @@ namespace QuizApp.Controllers
             model.CategoriesList = _db.Categories.Select(c => new SelectListItem
             {
                 Text = c.CategoryName,
-                Value = c.Id.ToString()     
+                Value = c.Id.ToString()
             }).ToList();
             return View(model);
         }
@@ -191,7 +191,7 @@ namespace QuizApp.Controllers
                 }
                 return RedirectToAction("TestPage", new { Token = Session["Token"] });
             }
-            return View(); 
+            return View();             
         }
 
         [HttpGet]
@@ -217,13 +217,11 @@ namespace QuizApp.Controllers
                 return RedirectToAction("SelectTest");
             }
 
-            var testSelected = _db.Enrollments.FirstOrDefault(e => e.Token.Equals(token));
-
             if (qnum.GetValueOrDefault() < 1)
                 qnum = 1;
 
             var testQuestionId = _db.Questions
-               .Where(q => q.TestId == testSelected.TestId && q.QuestionNumber == qnum)
+               .Where(q => q.TestId == enrollment.TestId && q.QuestionNumber == qnum)
                .Select(q => q.Id).FirstOrDefault();
 
             if (testQuestionId > 0)
@@ -246,6 +244,8 @@ namespace QuizApp.Controllers
 
                 model.TotalQuestionsCount = _db.Questions
                     .Where(q => q.TestId == enrollment.TestId).Count();
+                
+                ViewBag.TimeExpire = enrollment.TokenExpirationTime;               
 
                 return View(model);
             }

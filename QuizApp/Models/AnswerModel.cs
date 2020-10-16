@@ -17,6 +17,6 @@ namespace QuizApp.Models
         public string QuestionType { get; set; }
         public int? QPoints { get; set; }
         public int TotalQuestionsCount { get; set; }
-        public string TestTitle { get; set; }        
+        public string TestTitle { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace QuizApp.Models
@@ -12,6 +14,7 @@ namespace QuizApp.Models
 
         [StringLength(100, ErrorMessage = "Максимальная длина - 100 символов.")]
         public string Description { get; set; }
+        //public int Duration { get; set; }
         public int Duration { get; set; }
 
         // Foreign keys        

@@ -1,12 +1,16 @@
 ﻿@model QuizApp.Models.AnswerModel
+    @using System.Globalization;
 @{
     ViewBag.Title = "TestPage";
+    var testTimeExpire = Model.TestDuration;
+    var timeLeft = TimeSpan.FromTicks(testTimeExpire.Ticks - DateTime.UtcNow.Ticks).TotalSeconds.ToString("#", CultureInfo.InvariantCulture);
 }
 <h3>@Model.TestTitle</h3>
+
 <div class="row">
     <div class="col-md-12">
-        <div class="row">Вопрос @Model.QuestionNumber</div>
-        <div class="row">Оставшееся время:</div>
+        <div class="row">Вопрос: @Model.QuestionNumber</div>
+        <div class="row">Оставшееся время: <span id="minLeft"></span>:<span id="secLeft"></span></div>
     </div>
 </div>
 
@@ -31,11 +35,11 @@
 
                     for (int i = 0; i < Model.UserChoices.Count; i++)
                     {
-                           <div>
-                                @Html.RadioButtonFor(model => model.UserChoices, Model.UserChoices[i].ChoiceId)
-                               @Html.HiddenFor(model => model.UserChoices[i].ChoiceId)
-                               @Html.Label(Model.UserChoices[i].ChoiceText)     
-                           </div>
+                        <div>
+                            @Html.RadioButtonFor(model => model.UserChoices, Model.UserChoices[i].ChoiceId)
+                            @Html.HiddenFor(model => model.UserChoices[i].ChoiceId)
+                            @Html.Label(Model.UserChoices[i].ChoiceText)
+                        </div>
 
                     }
                     break;
@@ -48,7 +52,7 @@
                         <div>
                             @Html.CheckBoxFor(model => model.UserChoices[i].IsSelected, Model.UserChoices[i].ChoiceId)
                             @Html.HiddenFor(model => model.UserChoices[i].ChoiceId)
-                            @Html.Label(Model.UserChoices[i].ChoiceText)                                                      
+                            @Html.Label(Model.UserChoices[i].ChoiceText)
                         </div>
                     }
                     break;
@@ -58,30 +62,61 @@
                     <div>
                         <p>
                             @Html.TextAreaFor(model => model.UserChoices[0].ChoiceId, new { @class = "form-control" })
-                            @Html.HiddenFor(model => model.UserChoices[0].ChoiceId)                            
+                            @Html.HiddenFor(model => model.UserChoices[0].ChoiceId)
                         </p>
                     </div>
                     break;
             }
         </div>
     </div>
-   
+
     <div class="row">
         <div class="col-md-10">
             <table>
                 <tr>
                     <td><a href="javascript:void(0);" class="btn btn-primary" onclick="saveBackward(this);">Сохранить и Предыдущий</a></td>
-                    <td><a href="javascript:void(0);" class="btn btn-primary" onclick="saveForward(this);">Сохранить и Следующий</a></td>                    
+                    <td><a href="javascript:void(0);" class="btn btn-primary" onclick="saveForward(this);">Сохранить и Следующий</a></td>
                 </tr>
             </table>
         </div>
-    </div>    
+    </div>
 }
+
 <script>
+    var secondsLeft = @timeLeft;
+    var secondsCounter = secondsLeft % 60;
+
+    function formatNumber(number) {
+        if (number < 10) return '0' + number;
+        else return '' + number;
+    }
+    function startTick() {
+        document.getElementById('minLeft').innerText = formatNumber(parseInt(secondsLeft / 60));
+        document.getElementById('secLeft').innerText = formatNumber(parseInt(secondsCounter));        
+
+        var tick = setInterval(function () {
+            if (secondsLeft > 0) {
+                secondsLeft = secondsLeft - 1;
+                secondsCounter = secondsCounter - 1;
+
+                document.getElementById('minLeft').innerText = formatNumber(parseInt(secondsLeft / 60));
+                document.getElementById('secLeft').innerText = formatNumber(parseInt(secondsCounter));                
+
+                if (secondsCounter == 0)
+                    secondsCounter = 60;
+            }
+            else {
+                clearInterval(tick);
+            }
+        }, 1000);
+    }
+    startTick();
+
     function saveForward() {
         $('#Direction').val('next');
         document.getElementById('form').submit();
     }
+
     function saveBackward() {
         $('#Direction').val('previous');
         document.getElementById('form').submit();
