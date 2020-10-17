@@ -269,9 +269,7 @@ namespace QuizApp.Controllers
                         q.Id,
                         q.QuestionType,
                         Point = q.Points
-                    }).FirstOrDefault();
-                
-
+                    }).FirstOrDefault();         
             }
             // Показать следующий или предыдущий вопрос
 
