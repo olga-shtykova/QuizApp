@@ -20,22 +20,7 @@ namespace QuizApp.Controllers
         {
             var tests = _db.Tests.Include(t => t.Category).Include(t => t.Subcategory).Include(t => t.SubSubcategory);
             return View(tests.ToList());
-        }
-
-        // GET: Test/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Test test = _db.Tests.Find(id);
-            if (test == null)
-            {
-                return HttpNotFound();
-            }
-            return View(test);
-        }
+        }        
 
         // GET: Test/Create
         public ActionResult Create()

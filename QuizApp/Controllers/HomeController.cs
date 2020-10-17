@@ -244,8 +244,8 @@ namespace QuizApp.Controllers
 
                 model.TotalQuestionsCount = _db.Questions
                     .Where(q => q.TestId == enrollment.TestId).Count();
-                
-                ViewBag.TimeExpire = enrollment.TokenExpirationTime;               
+
+                ViewBag.TimeExpire = enrollment.TokenExpirationTime;          
 
                 return View(model);
             }
